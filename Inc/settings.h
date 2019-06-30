@@ -17,20 +17,23 @@
 #define DEFAULT_ABS_PULSE_RATIO_FR 		13.74484598968620000000
 #define DEFAULT_ABS_PULSE_RATIO_DIFF 	13.74484598968620000000
 
+#define F_COUNTER				100000
+#define ABS_PULSE_PRESCALER		8
+
 #define DEFAULT_SPEED 1
 
-#define EEADDR_SPEED_FL_L		0
-#define EEADDR_SPEED_FL_H		1
-#define EEADDR_SPEED_FR_L		2
-#define EEADDR_SPEED_FR_H		3
-#define EEADDR_SPEED_DIFF_L		4
-#define EEADDR_SPEED_DIFF_H		5
-#define EEADDR_PR_FL_L			6
-#define EEADDR_PR_FL_H			7
-#define EEADDR_PR_FR_L			8
-#define EEADDR_PR_FR_H			9
-#define EEADDR_PR_DIFF_L		10
-#define EEADDR_PR_DIFF_H		11
+#define EEADDR_PR_FL_L			0
+#define EEADDR_PR_FL_H			1
+#define EEADDR_PR_FR_L			2
+#define EEADDR_PR_FR_H			3
+#define EEADDR_PR_DIFF_L		4
+#define EEADDR_PR_DIFF_H		5
+//#define EEADDR_					6
+//#define EEADDR_					7
+//#define EEADDR_					8
+//#define EEADDR_					9
+//#define EEADDR_					10
+//#define EEADDR_					11
 //#define EEADDR_					12
 //#define EEADDR_					13
 //#define EEADDR_					14
@@ -39,6 +42,7 @@
 struct abs_channel
 {
 	float abs_pulse_ratio;
+	uint32_t raw_speed;
 	float speed;
 };
 

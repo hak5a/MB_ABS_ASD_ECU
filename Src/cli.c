@@ -112,23 +112,12 @@ void CLI_Parse_Commands(char *full_command)
     }
 
 
-    else if(strcmp(parsed_command, "speed_fl") == 0)
+    else if(strcmp(parsed_command, "speed?") == 0 || strcmp(parsed_command, "s") == 0)
     {
-        abs_channel_FL.speed = atof(parsed_attribute);
-        printf("OK, Front Left speed is now %.1f km/h\n\r", abs_channel_FL.speed);
-        pulse_generator_set_speed_FL(abs_channel_FL.speed);
-    }
-    else if(strcmp(parsed_command, "speed_fr") == 0)
-    {
-        abs_channel_FR.speed = atof(parsed_attribute);
-        printf("OK, Front Right speed is now %.1f km/h\n\r", abs_channel_FR.speed);
-        pulse_generator_set_speed_FR(abs_channel_FR.speed);
-    }
-    else if(strcmp(parsed_command, "speed_diff") == 0)
-    {
-        abs_channel_DIFF.speed = atof(parsed_attribute);
-        printf("OK, Diff speed is now %.1f km/h\n\r", abs_channel_DIFF.speed);
-        pulse_generator_set_speed_DIFF(abs_channel_DIFF.speed);
+    	printf("Speed: \n\r");
+        printf("Front Left  : %.1f km/h\n\r", abs_channel_FL.speed);
+        printf("Front Right : %.1f km/h\n\r", abs_channel_FR.speed);
+        printf("Diff        : %.1f km/h\n\r", abs_channel_DIFF.speed);
     }
     else if(strcmp(parsed_command, "save") == 0)
     {
@@ -161,15 +150,13 @@ void CLI_Parse_Commands(char *full_command)
     }
     else
     {
-    	printf("** MB 124 ABS ECU Emulator **\n\r");
+    	printf("** MB 124 ADS ECU **\n\r");
     	printf("Made by: hannu.kopsa@iki.fi\n\r");
     	printf("Supported Commands:\n\r");
-        printf("  speed_fl    [speed]        : Set speed\n\r");
-        printf("  speed_fr    [speed]        : Set speed\n\r");
-        printf("  speed_diff  [speed]        : Set speed\n\r");
+        printf("  speed? or s                : Print speed\n\r");
         printf("  pr_fl       [pulse ratio]  : Set ABS sensor pulse ratio\n\r");
-        printf("  pr_fl       [pulse ratio]  : Set ABS sensor pulse ratio\n\r");
-        printf("  pr_fl       [pulse ratio]  : Set ABS sensor pulse ratio\n\r");
+        printf("  pr_fr       [pulse ratio]  : Set ABS sensor pulse ratio\n\r");
+        printf("  pr_diff     [pulse ratio]  : Set ABS sensor pulse ratio\n\r");
         printf("  p                          : Print settings\n\r");
         printf("  reset                      : Restore factory default settings\n\r");
         printf("  save                       : Save all settings to memory\n\r");
@@ -184,9 +171,4 @@ void Print_Settings(void)
     printf("  ABS Pulse Ratio FR:   %f\n\r", abs_channel_FR.abs_pulse_ratio);
     printf("  ABS Pulse Ratio DIFF: %f\n\r", abs_channel_DIFF.abs_pulse_ratio);
     printf("\n\r");
-    printf("  speed_fl:   %.1f km/h\n\r", abs_channel_FL.speed);
-    printf("  speed_fr:   %.1f km/h\n\r", abs_channel_FR.speed);
-    printf("  speed_diff: %.1f km/h\n\r", abs_channel_DIFF.speed);
-    printf("\n\r");
-
 }

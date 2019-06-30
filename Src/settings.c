@@ -38,11 +38,6 @@ void Save_Settings(void)
 	//EE_WriteVariable(EEADDR_XXX_H, EEdata16bit_H);
 
 	// abs_channel_FL
-	EEdatafloat = abs_channel_FL.speed;
-	EEdata16bit_L = *((uint16_t*) &EEdatafloat + 0);
-	EEdata16bit_H = *((uint16_t*) &EEdatafloat + 1);
-	EE_WriteVariable(EEADDR_SPEED_FL_L, EEdata16bit_L);
-	EE_WriteVariable(EEADDR_SPEED_FL_H, EEdata16bit_H);
 	EEdatafloat = abs_channel_FL.abs_pulse_ratio;
 	EEdata16bit_L = *((uint16_t*) &EEdatafloat + 0);
 	EEdata16bit_H = *((uint16_t*) &EEdatafloat + 1);
@@ -50,11 +45,6 @@ void Save_Settings(void)
 	EE_WriteVariable(EEADDR_PR_FL_H, EEdata16bit_H);
 
 	// abs_channel_FR
-	EEdatafloat = abs_channel_FR.speed;
-	EEdata16bit_L = *((uint16_t*) &EEdatafloat + 0);
-	EEdata16bit_H = *((uint16_t*) &EEdatafloat + 1);
-	EE_WriteVariable(EEADDR_SPEED_FR_L, EEdata16bit_L);
-	EE_WriteVariable(EEADDR_SPEED_FR_H, EEdata16bit_H);
 	EEdatafloat = abs_channel_FR.abs_pulse_ratio;
 	EEdata16bit_L = *((uint16_t*) &EEdatafloat + 0);
 	EEdata16bit_H = *((uint16_t*) &EEdatafloat + 1);
@@ -62,11 +52,6 @@ void Save_Settings(void)
 	EE_WriteVariable(EEADDR_PR_FR_H, EEdata16bit_H);
 
 	// abs_channel_DIFF
-	EEdatafloat = abs_channel_DIFF.speed;
-	EEdata16bit_L = *((uint16_t*) &EEdatafloat + 0);
-	EEdata16bit_H = *((uint16_t*) &EEdatafloat + 1);
-	EE_WriteVariable(EEADDR_SPEED_DIFF_L, EEdata16bit_L);
-	EE_WriteVariable(EEADDR_SPEED_DIFF_H, EEdata16bit_H);
 	EEdatafloat = abs_channel_DIFF.abs_pulse_ratio;
 	EEdata16bit_L = *((uint16_t*) &EEdatafloat + 0);
 	EEdata16bit_H = *((uint16_t*) &EEdatafloat + 1);
@@ -152,60 +137,6 @@ void Restore_Settings(void)
 	{
 		abs_channel_DIFF.abs_pulse_ratio = EEdatafloat;
 	}
-
-	// Front left speed
-	err = FALSE;
-	if( EE_ReadVariable(EEADDR_SPEED_FL_L, &EEdata16bit) != 0 )	// Read value from EEPROM
-		err = TRUE;
-	*((uint16_t*) &EEdatafloat + 0) = EEdata16bit;
-	if( EE_ReadVariable(EEADDR_SPEED_FL_H, &EEdata16bit) != 0 )	// Read value from EEPROM
-		err = TRUE;
-	*((uint16_t*) &EEdatafloat + 1) = EEdata16bit;
-	if(err == TRUE)
-	{
-		abs_channel_FL.speed = DEFAULT_SPEED;					// if can not read, use default
-	}
-	else
-	{
-		abs_channel_FL.speed = EEdatafloat;
-	}
-	pulse_generator_set_speed_FL(abs_channel_FL.speed);
-
-	// Front right speed
-	err = FALSE;
-	if( EE_ReadVariable(EEADDR_SPEED_FR_L, &EEdata16bit) != 0 )	// Read value from EEPROM
-		err = TRUE;
-	*((uint16_t*) &EEdatafloat + 0) = EEdata16bit;
-	if( EE_ReadVariable(EEADDR_SPEED_FR_H, &EEdata16bit) != 0 )	// Read value from EEPROM
-		err = TRUE;
-	*((uint16_t*) &EEdatafloat + 1) = EEdata16bit;
-	if(err == TRUE)
-	{
-		abs_channel_FR.speed = DEFAULT_SPEED;				// if can not read, use default
-	}
-	else
-	{
-		abs_channel_FR.speed = EEdatafloat;
-	}
-	pulse_generator_set_speed_FR(abs_channel_FR.speed);
-
-	// Diff (rear) speed
-	err = FALSE;
-	if( EE_ReadVariable(EEADDR_SPEED_DIFF_L, &EEdata16bit) != 0 )	// Read value from EEPROM
-		err = TRUE;
-	*((uint16_t*) &EEdatafloat + 0) = EEdata16bit;
-	if( EE_ReadVariable(EEADDR_SPEED_DIFF_H, &EEdata16bit) != 0 )	// Read value from EEPROM
-		err = TRUE;
-	*((uint16_t*) &EEdatafloat + 1) = EEdata16bit;
-	if(err == TRUE)
-	{
-		abs_channel_DIFF.speed = DEFAULT_SPEED;				// if can not read, use default
-	}
-	else
-	{
-		abs_channel_DIFF.speed = EEdatafloat;
-	}
-	pulse_generator_set_speed_DIFF(abs_channel_DIFF.speed);
 }
 
 /**
@@ -218,7 +149,4 @@ void Reset_Settings(void)
 	abs_channel_FL.abs_pulse_ratio = DEFAULT_ABS_PULSE_RATIO_FL;
 	abs_channel_FR.abs_pulse_ratio = DEFAULT_ABS_PULSE_RATIO_FR;
 	abs_channel_DIFF.abs_pulse_ratio = DEFAULT_ABS_PULSE_RATIO_DIFF;
-	abs_channel_FL.speed = DEFAULT_SPEED;
-	abs_channel_FR.speed = DEFAULT_SPEED;
-	abs_channel_DIFF.speed = DEFAULT_SPEED;
 }
