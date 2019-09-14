@@ -13,6 +13,12 @@
 
 
 // Settings
+
+#define DEFAULT_SLIPPING_TRUE_THRESHOLD			0.20	// 20%
+#define DEFAULT_SLIPPING_FALSE_THRESHOLD		0.10	// 10%
+#define DEFAULT_ASD_MAX_SPEED					80.0	// km/h
+#define DEFAULT_VALVE_RELEASE_DELAY				1000	// ms
+
 #define DEFAULT_ABS_PULSE_RATIO_FL 		13.74484598968620000000
 #define DEFAULT_ABS_PULSE_RATIO_FR 		13.74484598968620000000
 #define DEFAULT_ABS_PULSE_RATIO_DIFF 	13.74484598968620000000
@@ -42,8 +48,7 @@
 struct abs_channel
 {
 	float abs_pulse_ratio;
-	uint32_t raw_speed;
-	float speed;
+	uint32_t frequency;
 };
 
 

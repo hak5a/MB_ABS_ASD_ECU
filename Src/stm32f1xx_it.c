@@ -37,6 +37,8 @@
 
 /* USER CODE BEGIN 0 */
 
+#include "asd_ecu.h"
+
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -179,6 +181,8 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
+
+  asd_control();
 
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();

@@ -115,9 +115,12 @@ void CLI_Parse_Commands(char *full_command)
     else if(strcmp(parsed_command, "speed?") == 0 || strcmp(parsed_command, "s") == 0)
     {
     	printf("Speed: \n\r");
-        printf("Front Left  : %.1f km/h\n\r", abs_channel_FL.speed);
-        printf("Front Right : %.1f km/h\n\r", abs_channel_FR.speed);
-        printf("Diff        : %.1f km/h\n\r", abs_channel_DIFF.speed);
+        printf("Front Left     : %.1f km/h\n\r", get_speed_FL());
+        printf("Front Right    : %.1f km/h\n\r", get_speed_FR());
+        printf("Diff           : %.1f km/h\n\r", get_speed_DIFF());
+        printf("Vehicle speed  : %.1f km/h\n\r", get_vehicle_speed());
+        printf("Slipping ratio : %.1f \n\r"    , get_slipping_ratio());
+        printf("ASD valve state: %d   \n\r"    , get_ASD_valve_state());
     }
     else if(strcmp(parsed_command, "save") == 0)
     {

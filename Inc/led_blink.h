@@ -10,7 +10,7 @@
 
 /* Public function prototypes -----------------------------------------------*/
 
-void CLI_run(void);
+void LedBlink_run(void);
 
 
 

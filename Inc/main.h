@@ -55,6 +55,8 @@
 #define ABS_Front_L_GPIO_Port GPIOA
 #define ABS_Front_R_Pin GPIO_PIN_6
 #define ABS_Front_R_GPIO_Port GPIOA
+#define ASD_Valve_Pin GPIO_PIN_0
+#define ASD_Valve_GPIO_Port GPIOB
 #define ABS_Diff_Pin GPIO_PIN_6
 #define ABS_Diff_GPIO_Port GPIOB
 

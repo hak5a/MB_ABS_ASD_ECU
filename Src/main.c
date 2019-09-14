@@ -170,7 +170,7 @@ int main(void)
   /* USER CODE BEGIN 3 */
 
 	  // Blink LED -> we can see it's alive
-//	  LedBlink_run();
+	  LedBlink_run();
 
 	  CLI_run();
 
@@ -512,12 +512,22 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GreenLED_GPIO_Port, GreenLED_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(ASD_Valve_GPIO_Port, ASD_Valve_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pin : GreenLED_Pin */
   GPIO_InitStruct.Pin = GreenLED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GreenLED_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : ASD_Valve_Pin */
+  GPIO_InitStruct.Pin = ASD_Valve_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(ASD_Valve_GPIO_Port, &GPIO_InitStruct);
 
 }
 

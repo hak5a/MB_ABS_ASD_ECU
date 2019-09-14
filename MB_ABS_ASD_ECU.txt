@@ -1,6 +1,6 @@
 Configuration	MB_ABS_ASD_ECU
 STM32CubeMX 	4.27.0
-Date	04/07/2019
+Date	09/14/2019
 MCU	STM32F103C8Tx
 
 
@@ -19,16 +19,10 @@ TIM1	Reset Mode	TIM1_VS_ControllerModeReset	VP_TIM1_VS_ControllerModeReset
 TIM1	TI1FP1	TIM1_CH1	PA8
 TIM1	Internal Clock	TIM1_VS_ClockSourceINT	VP_TIM1_VS_ClockSourceINT
 TIM1	PWM Generation CH4	TIM1_CH4	PA11
-TIM2	Reset Mode	TIM2_VS_ControllerModeReset	VP_TIM2_VS_ControllerModeReset
-TIM2	TI1FP1	TIM2_CH1	PA0-WKUP
 TIM2	Internal Clock	TIM2_VS_ClockSourceINT	VP_TIM2_VS_ClockSourceINT
 TIM2	Input Capture direct mode	TIM2_CH1	PA0-WKUP
-TIM3	Reset Mode	TIM3_VS_ControllerModeReset	VP_TIM3_VS_ControllerModeReset
-TIM3	TI1FP1	TIM3_CH1	PA6
 TIM3	Internal Clock	TIM3_VS_ClockSourceINT	VP_TIM3_VS_ClockSourceINT
 TIM3	Input Capture direct mode	TIM3_CH1	PA6
-TIM4	Reset Mode	TIM4_VS_ControllerModeReset	VP_TIM4_VS_ControllerModeReset
-TIM4	TI1FP1	TIM4_CH1	PB6
 TIM4	Internal Clock	TIM4_VS_ClockSourceINT	VP_TIM4_VS_ClockSourceINT
 TIM4	Input Capture direct mode	TIM4_CH1	PB6
 USART1	Asynchronous	USART1_RX	PA10
@@ -44,6 +38,7 @@ Pin Nb	PINs	FUNCTIONs	LABELs
 6	PD1-OSC_OUT	RCC_OSC_OUT	
 10	PA0-WKUP	TIM2_CH1	ABS_Front_L
 16	PA6	TIM3_CH1	ABS_Front_R
+18	PB0	GPIO_Output	ASD_Valve
 29	PA8	TIM1_CH1	
 30	PA9	USART1_TX	
 31	PA10	USART1_RX	

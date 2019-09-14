@@ -11,107 +11,103 @@
 #include "main.h"
 #include "stm32f1xx_hal.h"
 #include "asd_ecu.h"
+#include "frequency_counter.h"
 #include "settings.h"
 
 /* Private defines -----------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
 
-extern TIM_HandleTypeDef htim1;
-extern TIM_HandleTypeDef htim2;
-extern TIM_HandleTypeDef htim3;
-extern TIM_HandleTypeDef htim4;
-
 extern struct abs_channel abs_channel_FL;
 extern struct abs_channel abs_channel_FR;
 extern struct abs_channel abs_channel_DIFF;
 
-uint8_t TIM2_overflow = 0;
-uint8_t TIM3_overflow = 0;
-uint8_t TIM4_overflow = 0;
+static uint8_t  asd_valve_state = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
 
-
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+void asd_control(void)
 {
-	uint16_t input_capture;
+	static uint8_t  new_asd_valve_state = 0;
+	static uint32_t time_valve_on = 0;
 
-	if (htim->Instance==TIM2)
+	uint32_t time_now = HAL_GetTick();
+
+	if( get_slipping_ratio() > DEFAULT_SLIPPING_TRUE_THRESHOLD && get_vehicle_speed() < DEFAULT_ASD_MAX_SPEED )
+		new_asd_valve_state = 1;
+	else if ( get_slipping_ratio() < DEFAULT_SLIPPING_FALSE_THRESHOLD )
+		new_asd_valve_state = 0;
+
+	if( asd_valve_state == 0 && new_asd_valve_state == 1 )
 	{
-		__HAL_TIM_SET_COUNTER(htim, 0);    //reset counter after input capture interrupt occurs
-		input_capture= __HAL_TIM_GET_COMPARE(htim, TIM_CHANNEL_1);    //read TIM2 channel 1 capture value
-
-//		HAL_GPIO_TogglePin(GreenLED_GPIO_Port, GreenLED_Pin);
-
-		if(TIM2_overflow)
-		{
-//			HAL_GPIO_TogglePin(GreenLED_GPIO_Port, GreenLED_Pin);
-
-			TIM2_overflow = 0;
-			abs_channel_FL.speed = 0.1;
-		}
-		else
-		{
-			abs_channel_FL.speed = (float)(F_COUNTER*ABS_PULSE_PRESCALER/(input_capture))/abs_channel_FL.abs_pulse_ratio;
-		}
+		time_valve_on = time_now;
+		asd_valve_state = 1;
 	}
-	if (htim->Instance==TIM3)
+
+	if( asd_valve_state == 1 && (time_now - time_valve_on) > DEFAULT_VALVE_RELEASE_DELAY )
 	{
-		__HAL_TIM_SET_COUNTER(htim, 0);    //reset counter after input capture interrupt occurs
-		input_capture= __HAL_TIM_GET_COMPARE(htim, TIM_CHANNEL_1);    //read TIM3 channel 1 capture value
-
-//		HAL_GPIO_TogglePin(GreenLED_GPIO_Port, GreenLED_Pin);
-
-		if(TIM3_overflow)
-		{
-//			HAL_GPIO_TogglePin(GreenLED_GPIO_Port, GreenLED_Pin);
-
-			TIM3_overflow = 0;
-			abs_channel_FR.speed = 0.1;
-		}
-		else
-		{
-			abs_channel_FR.speed = (float)(F_COUNTER*ABS_PULSE_PRESCALER/(input_capture))/abs_channel_FR.abs_pulse_ratio;
-		}
+		asd_valve_state = 0;
 	}
-	if (htim->Instance==TIM4)
+
+	if( asd_valve_state == 1 )
 	{
-		__HAL_TIM_SET_COUNTER(htim, 0);    //reset counter after input capture interrupt occurs
-		input_capture= __HAL_TIM_GET_COMPARE(htim, TIM_CHANNEL_1);    //read TIM4 channel 1 capture value
+		//HAL_GPIO_WritePin(ASD_Valve_GPIO_Port, ASD_Valve_Pin, GPIO_PIN_SET);		// Valve ON
 
-//		HAL_GPIO_TogglePin(GreenLED_GPIO_Port, GreenLED_Pin);
-
-		if(TIM4_overflow)
-		{
-//			HAL_GPIO_TogglePin(GreenLED_GPIO_Port, GreenLED_Pin);
-
-			TIM4_overflow = 0;
-			abs_channel_DIFF.speed = 0.1;
-		}
-		else
-		{
-			abs_channel_DIFF.speed = (float)(F_COUNTER*ABS_PULSE_PRESCALER/(input_capture))/abs_channel_DIFF.abs_pulse_ratio;
-		}
+		HAL_GPIO_TogglePin(ASD_Valve_GPIO_Port, ASD_Valve_Pin); // test!!!!!!!!!!
 	}
+	else
+	{
+		HAL_GPIO_WritePin(ASD_Valve_GPIO_Port, ASD_Valve_Pin, GPIO_PIN_RESET);	// Valve OFF
+	}
+
 }
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+uint8_t get_ASD_valve_state(void)
 {
-    if (htim->Instance==TIM2) //check if the interrupt comes from TIM2
-	{
-    	TIM2_overflow = 1;
-    	abs_channel_FL.speed = 0.1;
-	}
-    if (htim->Instance==TIM3) //check if the interrupt comes from TIM3
-	{
-		TIM3_overflow = 1;
-		abs_channel_FR.speed = 0.1;
-	}
-    if (htim->Instance==TIM4) //check if the interrupt comes from TIM4
-	{
-		TIM4_overflow = 1;
-		abs_channel_DIFF.speed = 0.1;
-	}
+	return asd_valve_state;
 }
+
+float get_slipping_ratio(void)
+{
+	float average_speed_f = (get_speed_FL() + get_speed_FR()) / 2;
+	float slipping_ratio = get_speed_DIFF() / average_speed_f - 1.0;
+	return slipping_ratio;
+}
+
+float get_vehicle_speed(void)
+{
+	float average_speed = (get_speed_FL() + get_speed_FR()) / 2;
+	return average_speed;
+}
+
+float get_speed_FL(void)
+{
+	return (float)abs_channel_FL.frequency/abs_channel_FL.abs_pulse_ratio;
+}
+
+float get_speed_FR(void)
+{
+	return (float)abs_channel_FR.frequency/abs_channel_FR.abs_pulse_ratio;
+}
+
+float get_speed_DIFF(void)
+{
+	return (float)abs_channel_DIFF.frequency/abs_channel_DIFF.abs_pulse_ratio;
+}
+
+float get_frequency_FL(void)
+{
+	return (float)abs_channel_FL.frequency;
+}
+
+float get_frequency_FR(void)
+{
+	return (float)abs_channel_FR.frequency;
+}
+
+float get_frequency_DIFF(void)
+{
+	return (float)abs_channel_DIFF.frequency;
+}
+
